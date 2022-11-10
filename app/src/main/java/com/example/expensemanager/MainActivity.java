@@ -14,15 +14,23 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.LineNumberInputStream;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
+
+    private  ExpensesAdapter expensesAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        expensesAdapter=new ExpensesAdapter(this);
         Intent intent=new Intent(MainActivity.this,AddExpenseActivity.class);
 
         binding.addIncome.setOnClickListener(new View.OnClickListener() {
@@ -79,5 +87,18 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore
                 .getInstance()
                 .collection("expenses")
+                .whereEqualTo("uid",FirebaseAuth.getInstance().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        expensesAdapter.clear();
+                        List<DocumentSnapshot> dsList=queryDocumentSnapshots.getDocuments();
+                        for(DocumentSnapshot ds:dsList){
+                            ExpenseModel expenseModel=ds.toObject(ExpenseModel.class);
+                            expensesAdapter.add(expenseModel);
+                        }
+                    }
+                });
     }
 }

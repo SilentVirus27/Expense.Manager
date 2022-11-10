@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.expensemanager.databinding.ActivityAddExpenseBinding;
 import com.example.expensemanager.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -91,7 +92,7 @@ public class AddExpenseActivity extends AppCompatActivity {
             return;
         }
 
-        ExpenseModel expenseModel=new ExpenseModel(expenseId,note,category,type,Long.parseLong(amount), Calendar.getInstance().getTimeInMillis());
+        ExpenseModel expenseModel=new ExpenseModel(expenseId,note,category,type,Long.parseLong(amount), Calendar.getInstance().getTimeInMillis(), FirebaseAuth.getInstance().getUid());
 
         FirebaseFirestore
                 .getInstance()
