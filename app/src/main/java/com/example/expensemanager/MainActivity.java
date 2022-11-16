@@ -21,17 +21,26 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.LineNumberInputStream;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemsClick{
     ActivityMainBinding binding;
 
     private  ExpensesAdapter expensesAdapter;
+    Intent intent;
+    @Override
+    public void onClick(ExpenseModel expenseModel) {
+        intent.putExtra("model",expenseModel);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        expensesAdapter=new ExpensesAdapter(this);
-        Intent intent=new Intent(MainActivity.this,AddExpenseActivity.class);
+
+        expensesAdapter=new ExpensesAdapter(this,this);
+
+        intent=new Intent(MainActivity.this,AddExpenseActivity.class);
 
         binding.addIncome.setOnClickListener(new View.OnClickListener() {
             @Override

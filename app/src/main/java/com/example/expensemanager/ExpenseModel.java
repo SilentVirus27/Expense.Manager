@@ -1,8 +1,9 @@
 package com.example.expensemanager;
 
+import java.io.Serializable;
 import java.io.StringReader;
 
-public class ExpenseModel {
+public class ExpenseModel implements Serializable {
     private String expenseId;
     private String note;
     private String category;
